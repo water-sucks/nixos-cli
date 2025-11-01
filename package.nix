@@ -13,7 +13,7 @@ buildGoModule (finalAttrs: {
   version = "0.14.0-dev";
   src = nix-gitignore.gitignoreSource [] ./.;
 
-  vendorHash = "sha256-I04cLEXLTRbxxCBemj4J6JzrtDaUQS0TuZZ8Fa0EZBk=";
+  vendorHash = "sha256-iHAk2A7Dz0QqwDioXlsd/usHFNYIb7MwTkNbQOTO7F4=";
 
   nativeBuildInputs = [installShellFiles scdoc];
 

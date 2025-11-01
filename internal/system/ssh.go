@@ -20,6 +20,7 @@ import (
 	"github.com/nix-community/nixos-cli/internal/logger"
 	"github.com/nix-community/nixos-cli/internal/utils"
 	"github.com/pkg/sftp"
+	"github.com/pkg/term/termios"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
 	"golang.org/x/crypto/ssh/knownhosts"
@@ -253,16 +254,18 @@ func (s *SSHSystem) Run(cmd *Command) (int, error) {
 			return 0, fmt.Errorf("failed to allocate pty for process: %w", err)
 		}
 
-		fd := int(file.Fd())
-		oldState, err := term.MakeRaw(fd)
+		fd := file.Fd()
+		oldState, err := term.MakeRaw(int(fd))
 		restoreLocal := func() {
-			_ = term.Restore(fd, oldState)
+			_ = term.Restore(int(fd), oldState)
 		}
 		if err != nil {
 			log.Warnf("unable to make local terminal raw: %v", err)
 		} else {
 			defer restoreLocal()
 		}
+
+		_ = termios.Tcflush(fd, termios.TCIFLUSH)
 	}
 
 	session.Stdin = cmd.Stdin
