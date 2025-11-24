@@ -158,6 +158,11 @@ func diffClosureSets(before, after []PathInfo) *ClosureDiff {
 }
 
 func getClosurePaths(conn *sql.DB, closurePath string) ([]PathInfo, error) {
+	resolvedClosurePath, err := filepath.EvalSymlinks(closurePath)
+	if err != nil {
+		return nil, err
+	}
+
 	const query = `
 WITH RECURSIVE closure(id) AS (
     SELECT id FROM ValidPaths WHERE path = ?
@@ -168,7 +173,7 @@ WITH RECURSIVE closure(id) AS (
 SELECT id, path, hash, narSize FROM ValidPaths WHERE id IN closure;
 `
 
-	rows, err := conn.Query(query, closurePath)
+	rows, err := conn.Query(query, resolvedClosurePath)
 	if err != nil {
 		return nil, err
 	}
