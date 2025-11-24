@@ -7,4 +7,5 @@ const (
 	CurrentSystem             = "/run/current-system"
 	NixOSMarker               = "/etc/NIXOS"
 	NixChannelDirectory       = NixProfileDirectory + "/per-user/root/channels"
+	NixStoreDatabase          = "/nix/var/nix/db/db.sqlite"
 )
