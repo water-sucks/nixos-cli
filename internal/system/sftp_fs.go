@@ -47,3 +47,11 @@ func (f *SFTPFilesystem) CreateFile(path string) error {
 	_ = file.Close()
 	return nil
 }
+
+func (f *SFTPFilesystem) ReadDir(path string) ([]os.FileInfo, error) {
+	return f.client.ReadDir(path)
+}
+
+func (f *SFTPFilesystem) Glob(pattern string) ([]string, error) {
+	return f.client.Glob(pattern)
+}

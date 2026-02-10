@@ -2,6 +2,7 @@ package system
 
 import (
 	"os"
+	"path/filepath"
 )
 
 type LocalFilesystem struct{}
@@ -30,4 +31,27 @@ func (LocalFilesystem) CreateFile(path string) error {
 
 	_ = f.Close()
 	return nil
+}
+
+func (LocalFilesystem) ReadDir(path string) ([]os.FileInfo, error) {
+	dirEntries, err := os.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+
+	entries := make([]os.FileInfo, len(dirEntries))
+	for i, entry := range dirEntries {
+		var info os.FileInfo
+		info, err = entry.Info()
+		if err != nil {
+			return nil, err
+		}
+		entries[i] = info
+	}
+
+	return entries, nil
+}
+
+func (LocalFilesystem) Glob(pattern string) ([]string, error) {
+	return filepath.Glob(pattern)
 }

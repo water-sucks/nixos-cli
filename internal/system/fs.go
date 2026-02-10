@@ -8,4 +8,6 @@ type Filesystem interface {
 	MkdirAll(path string, perm os.FileMode) error
 	ReadFile(path string) ([]byte, error)
 	CreateFile(path string) error
+	ReadDir(path string) ([]os.FileInfo, error)
+	Glob(pattern string) ([]string, error)
 }
